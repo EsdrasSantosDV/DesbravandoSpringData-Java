@@ -1,22 +1,30 @@
 package com.example.springdataestudo.model;
 
-
 import javax.persistence.*;
 
 @Entity
-@Table(name="cargos")
-public class Cargo {
-
-
+@Table(name="unidade_trabalho")
+public class UnidadeTrabalho {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "funcionario_id")
-    private Funcionario funcionario;
-    @Column(name="descricao")
     private String descricao;
+
+    private String endereco;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Funcionario funcionario;
+
+
+    public UnidadeTrabalho(String descricao, String endereco) {
+        this.descricao = descricao;
+        this.endereco = endereco;
+    }
+
+    public UnidadeTrabalho() {
+
+    }
 
 
     public Integer getId() {
@@ -35,11 +43,20 @@ public class Cargo {
         this.descricao = descricao;
     }
 
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
     @Override
     public String toString() {
-        return "Cargo{" +
+        return "UnidadeTrabalho{" +
                 "id=" + id +
                 ", descricao='" + descricao + '\'' +
+                ", endereco='" + endereco + '\'' +
                 '}';
     }
 }

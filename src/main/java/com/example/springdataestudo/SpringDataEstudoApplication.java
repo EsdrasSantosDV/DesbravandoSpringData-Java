@@ -2,18 +2,23 @@ package com.example.springdataestudo;
 
 import com.example.springdataestudo.model.Cargo;
 import com.example.springdataestudo.repository.CargoRepository;
+import com.example.springdataestudo.service.CrudCargoService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.Scanner;
+
 @SpringBootApplication
 public class SpringDataEstudoApplication implements CommandLineRunner {
 
-	private  final CargoRepository repository;
+	private  final CrudCargoService cargoservice;
 
-	public  SpringDataEstudoApplication(CargoRepository repository)
+	private  Boolean system=true;
+
+	public  SpringDataEstudoApplication(CrudCargoService cargoservice)
 	{
-		this.repository=repository;
+		this.cargoservice=cargoservice;
 	}
 
 	public static void main(String[] args) {
@@ -22,10 +27,30 @@ public class SpringDataEstudoApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Cargo cargo=new Cargo();
-		cargo.setDescricao("DESENVOLVEDOR DE SOFTWARE");
+		Scanner scanner= new Scanner(System.in);
 
-		//SALVA NA BASE DE DADOS
-		repository.save(cargo);
+
+		while(system)
+		{
+			System.out.println("Qual acao?");
+			System.out.println("0---sair");
+			System.out.println("1---Cargo");
+
+			int action = scanner.nextInt();
+
+			if(action == 1)
+			{
+				cargoservice.inicial(scanner);
+
+			}
+			else
+			{
+				system=false;
+
+			}
+
+		}
+
+
 	}
 }
