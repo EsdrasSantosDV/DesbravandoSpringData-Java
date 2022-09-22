@@ -1,48 +1,42 @@
 package com.example.springdataestudo.model;
 
-
-import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 @Entity
-@Table(name="funcionarios")
+@Table(name = "funcionarios")
 public class Funcionario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(name="nome")
     private String nome;
-
-    @Column(name="cpf")
     private String cpf;
-
-    @Column(name="salario")
     private Double salario;
-
-    @Column(name="data_contratacao")
-    private LocalDate date;
-
-
-    @ManyToOne(fetch=FetchType.LAZY)
+    private LocalDate dataContratacao;
+    @ManyToOne
+    @JoinColumn(name = "cargo_id", nullable = false)
     private Cargo cargo;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funcionario")
-    private List<UnidadeTrabalho> unidadeTrabalhoList;
-
-
-    public Funcionario(String nome, String cpf, Double salario, LocalDate date) {
-        this.nome = nome;
-        this.cpf = cpf;
-        this.salario = salario;
-        this.date = LocalDate.now();
-    }
-
-
-    public Funcionario() {
-
-    }
+    @Fetch(FetchMode.SELECT)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "funcionarios_unidades", joinColumns = {
+            @JoinColumn(name = "fk_funcionario") },
+            inverseJoinColumns = { @JoinColumn(name = "fk_unidade") })
+    private List<UnidadeTrabalho> unidadeTrabalhos;
 
     public Integer getId() {
         return id;
@@ -76,22 +70,33 @@ public class Funcionario {
         this.salario = salario;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getDataContratacao() {
+        return dataContratacao;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setDataContratacao(LocalDate dataContratacao) {
+        this.dataContratacao = dataContratacao;
+    }
+
+    public Cargo getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(Cargo cargo) {
+        this.cargo = cargo;
+    }
+
+    public List<UnidadeTrabalho> getUnidadeTrabalhos() {
+        return unidadeTrabalhos;
+    }
+
+    public void setUnidadeTrabalhos(List<UnidadeTrabalho> unidadeTrabalhos) {
+        this.unidadeTrabalhos = unidadeTrabalhos;
     }
 
     @Override
     public String toString() {
-        return "Funcionario{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", cpf='" + cpf + '\'' +
-                ", salario=" + salario +
-                ", date=" + date +
-                '}';
+        return "Funcionario: " + "id:" + id + "| nome:'" + nome + "| cpf:" + cpf + "| salario:" + salario
+                + "| dataContratacao:" + dataContratacao + "| cargo:" + cargo.getDescricao();
     }
 }
